@@ -1,0 +1,23 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out the repository
+      uses: actions/checkout@v4
+
+    - name: Log in to Azure ACR
+      run: |
+        echo ${{ secrets.AZURE_ACR_PASSWORD }} | docker login templateforaa3.azurecr.io -u ${{ secrets.AZURE_ACR_USERNAME }} --password-stdin
+
+    - name: Build Docker image
+      run: |
+        docker build -t templateforaa3.azurecr.io/your-docker-image:latest .
+
+    - name: Push Docker image to ACR
+      run: |
+        docker push templateforaa3.azurecr.io/your-docker-image:latest
