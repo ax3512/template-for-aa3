@@ -1,10 +1,6 @@
 name: CI
 
-on:
-  push:
-    branches:
-      - main
-      - dev
+on: [push]
 
 jobs:
   build:
@@ -12,21 +8,16 @@ jobs:
 
     steps:
     - name: Check out the repository
-      uses: actions/checkout@v4  # 최신 버전 사용
+      uses: actions/checkout@v4
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3  # 최신 버전 사용
-      with:
-        java-version: 17
-        distribution: 'temurin'
-        cache: 'maven'
-
-    - name: Log Node.js version
-      run: node --version  # 사용 중인 Node.js 버전 확인
+    - name: Log in to Azure ACR
+      run: |
+        echo ${{ secrets.AZURE_ACR_PASSWORD }} | docker login templateforaa3.azurecr.io -u ${{ secrets.AZURE_ACR_USERNAME }} --password-stdin
 
     - name: Build Docker image
       run: |
-        docker build -t your-docker-image:latest .
+        docker build -t templateforaa3.azurecr.io/your-docker-image:latest .
 
-    - name: Display success message
-      run: echo "Docker image built successfully!"
+    - name: Push Docker image to ACR
+      run: |
+        docker push templateforaa3.azurecr.io/your-docker-image:latest
