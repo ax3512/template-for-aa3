@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sampleapp1-[사번]
+  labels:
+    app: sampleapp1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sampleapp1
+  template:
+    metadata:
+      labels:
+        app: sampleapp1
+    spec:
+      containers:
+      - name: sampleapp1
+        image: your-docker-image:latest  # 푸시한 Docker 이미지 경로 입력
+        ports:
+        - containerPort: 8080
+        env:
+        - name: FLASK_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: flask_env
