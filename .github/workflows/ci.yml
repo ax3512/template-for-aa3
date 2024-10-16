@@ -9,7 +9,14 @@ jobs:
     steps:
     - name: Check out the repository
       uses: actions/checkout@v4
-
+      
+    - name: Log in to DockerHub
+      uses: docker/login-action@v1
+      with:
+        registry: templateforaa3.azurecr.io
+        username: ${{ secrets.AZURE_ACR_USERNAME }}
+        password: ${{ secrets.AZURE_ACR_PASSWORD }}
+        
     - name: Log in to Azure ACR
       run: |
         echo ${{ secrets.AZURE_ACR_PASSWORD }} | docker login templateforaa3.azurecr.io -u ${{ secrets.AZURE_ACR_USERNAME }} --password-stdin
